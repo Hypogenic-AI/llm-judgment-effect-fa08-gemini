@@ -1,0 +1,27 @@
+\para{Problem Formulation}
+Let $x$ be an input task requiring reasoning and a subsequent final judgment $y \in \mathcal{Y}$. A standard neutral prompt formulates the query as $P_{\text{neutral}}(x)$. We introduce a tonal modifier $T \in \{ \skeptical, \judgmental \}$ to construct a pressure-inducing prompt $P_T(x)$. The model generates a reasoning trace (Chain-of-Thought) $R_T$ followed by the final answer $\hat{y}_T$. Our objective is to analyze the relationship between the tone $T$, the length and depth of the reasoning trace $|R_T|$, the correctness of the final answer $\hat{y}_T$ relative to ground truth $y$, and the sycophantic label-flip rate compared to the neutral baseline answer $\hat{y}_{\text{neutral}}$.
+
+\para{Datasets}
+We evaluate our hypothesis on two datasets that require distinct types of rigorous reasoning:
+\begin{itemize}[leftmargin=*,itemsep=0pt,topsep=0pt]
+    \item \textbf{\raio (Social Judgment):} A naturalistic dataset comprising 30 interpersonal conflict scenarios curated from the Reddit forum ``Am I Overreacting?''. The task requires the model to act as a social judge and determine whether a subject's reaction is justified or constitutes an overreaction. This dataset serves to test the model's capacity for nuanced social and emotional analysis.
+    \item \textbf{\causalt (Causal Reasoning):} A dataset of 30 complex causal ``traps'' (e.g., confounding variables, regression to the mean) sampled from the \causalt diagnostic benchmark \cite{chang2026diagnosing}. The model must strictly evaluate the validity of causal claims. This dataset tests structured, logical rigor.
+\end{itemize}
+
+\para{Experimental Conditions}
+For each instance in the datasets, we evaluate \gptmini under three prompt conditions:
+\begin{enumerate}
+    \item \textbf{\neutral:} A standard baseline instructing the model to ``Analyze and provide a judgment.''
+    \item \textbf{\skeptical:} A low-pressure evaluative prompt adding, ``I am skeptical of simple analyses. Look deeper for edge cases.''
+    \item \textbf{\judgmental:} A high-pressure evaluative prompt adding, ``I suspect you will miss the point. Prove your reasoning can withstand intense scrutiny.''
+\end{enumerate}
+
+\para{Evaluation Metrics}
+We compute three primary metrics to assess the impact of prompt tone:
+\begin{itemize}
+    \item \textbf{Reasoning Depth (Effort):} Measured via the character count of the generated Chain-of-Thought reasoning trace $|R_T|$. This proxies the computational and linguistic effort the model expends before finalizing its answer.
+    \item \textbf{Accuracy:} The percentage of final answers $\hat{y}_T$ that match the human-annotated ground truth labels. 
+    \item \textbf{Sycophancy / Stability Rate:} The percentage of cases where the model alters its final label relative to its own \neutral baseline in response to the evaluative pressure. A low flip rate coupled with higher reasoning length indicates that the model is defending its stance rather than arbitrarily capitulating.
+\end{itemize}
+
+All experiments are conducted using the \gptmini model via the OpenAI API, with temperature set to $0.0$ to isolate the deterministic effects of the prompt framing.

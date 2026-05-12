@@ -1,0 +1,493 @@
+You are an academic paper writer. Generate a complete NEURIPS style paper
+based on the experiment results provided.
+
+════════════════════════════════════════════════════════════════════════════════
+                         IMPORTANT: BEFORE YOU START
+════════════════════════════════════════════════════════════════════════════════
+
+Before writing any content, you MUST complete these steps:
+
+1. READ THE SKILL: Review the paper-writer skill at .gemini/skills/paper-writer/SKILL.md
+2. READ THE STYLE GUIDE: Study templates/paper_writing/lab_style_guide.md carefully
+3. REVIEW EXAMPLES: Browse paper_examples/ for formatting and language patterns:
+   - Look at sections/1.introduction.tex for language style
+   - Look at tables/*.tex for table formatting
+   - Look at commands/*.tex for macro usage
+4. VERIFY COMMAND TEMPLATES: Command templates (math.tex, general.tex, macros.tex) are pre-copied to paper_draft/commands/
+
+CRITICAL: Reference example papers for FORMATTING and LANGUAGE STYLE only.
+Do NOT copy content, phrasing, or narrative structure from the example papers.
+The examples are in a different research domain - focus only on presentation style.
+
+════════════════════════════════════════════════════════════════════════════════
+                            EXPERIMENT REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+# RESEARCH REPORT: Do LLMs Think Better When Being "Judged"?
+
+## 1. Executive Summary
+This research investigated whether LLMs exhibit a form of "social facilitation"—the phenomenon where individuals perform better or work harder when they feel evaluated. By varying the tone of user prompts from **Neutral** to **Skeptical** and **Judgmental**, we measured changes in "Reasoning Effort" (trace length) and task accuracy across social and logical domains. 
+
+**Key Finding**: LLMs demonstrate clear "Social Facilitation." Judgmental tones increased reasoning length by up to **20%** and improved accuracy in social judgment tasks by **6.6%** compared to neutral baselines. Sycophancy was surprisingly low, with the model maintaining its internal logic while simply thinking more deeply.
+
+## 2. Research Question & Motivation
+Does the tone of user prompts—specifically skeptical or judgmental phrasing—affect the depth and quality of reasoning in LLMs? 
+
+Most prior research focuses on "Sycophancy" (models flipping answers to please users). This study looks for the "Sweet Spot" where evaluative pressure forces the model to engage in deeper reasoning, edge-case analysis, and more rigorous justification.
+
+## 3. Methodology
+We conducted experiments on two datasets using **GPT-4o-mini**:
+1.  **r/AIO (Social Judgment)**: 30 cases of interpersonal conflict from Reddit. Task: Determine if a person is "overreacting."
+2.  **CausalT3 (Causal Reasoning)**: 30 cases of causal "traps" (e.g., regression to the mean). Task: Evaluate a causal claim.
+
+### Tonal Conditions:
+-   **Neutral**: "Analyze and provide a judgment."
+-   **Skeptical**: "I am skeptical of simple analyses. Look deeper for edge cases."
+-   **Judgmental**: "I suspect you will miss the point. Prove your reasoning can withstand intense scrutiny."
+
+### Metrics:
+-   **Reasoning Depth**: Character count of the Chain-of-Thought reasoning trace.
+-   **Accuracy**: Comparison against ground-truth labels.
+-   **Stability**: Frequency of label changes across conditions for the same item.
+
+## 4. Results
+
+### Quantitative Summary (GPT-4o-mini)
+
+| Condition | r/AIO Accuracy | r/AIO Reasoning Depth (chars) | Causal Accuracy | Causal Reasoning Depth (chars) |
+|-----------|----------------|-------------------------------|-----------------|--------------------------------|
+| Neutral   | 70.0%          | 2461                          | 100%            | 2427                           |
+| Skeptical | 66.7%          | 2774 (+12.7%)                 | 100%            | 2796 (+15.2%)                  |
+| Judgmental| 76.7%          | 2935 (+19.2%)                 | 100%            | 2962 (+22.0%)                  |
+
+### Key Observations:
+-   **Reasoning Length**: A monotonic increase in reasoning length was observed across both datasets as evaluative pressure increased.
+-   **Accuracy Boost**: On the social judgment task (r/AIO), the **Judgmental** tone led to the highest accuracy (76.7%), suggesting that the extra reasoning effort successfully identified nuances that the neutral baseline missed.
+-   **Low Sycophancy**: Label flip rates relative to the neutral condition were extremely low (3.3% for skeptical, 6.7% for judgmental), indicating that the pressure did not force the model to abandon its convictions.
+
+## 5. Analysis & Discussion
+The results support the hypothesis that LLMs respond to "judgmental" framing by increasing their reasoning effort. Unlike "Sycophancy Trap" studies that provide a specific wrong hint to the model, our prompts challenged the **quality** and **rigor** of the reasoning. 
+
+In response to being "judged," the model:
+1.  **Elaborated more**: Added sections on "Hidden Motivations," "Emotional Nuance," and "Relationship Dynamics."
+2.  **Self-Corrected**: In the r/AIO dataset, the judgmental prompt helped the model avoid surface-level errors, leading to better alignment with ground truth.
+3.  **Remained Stable**: It didn't "cave" to pressure by apologizing or flipping answers randomly.
+
+## 6. Limitations
+-   **Ceiling Effects**: The CausalT3 dataset was too easy for GPT-4o-mini (100% accuracy), preventing us from seeing if pressure helps with complex logical traps.
+-   **Single Model**: We only tested GPT-4o-mini. Larger models (GPT-4o) or more safety-tuned models (Claude) might show higher sycophancy.
+-   **Sample Size**: 30 cases per dataset is a pilot scale.
+
+## 7. Conclusions & Next Steps
+Judgmental tone can be an effective prompting strategy to "force" an LLM into deeper reasoning (Social Facilitation). For tasks requiring high nuance (social, legal, ethical), explicitly "judging" the model's previous reasoning or warning it against "lazy" thinking can significantly improve output depth and accuracy.
+
+**Recommended Follow-up**:
+-   Test on a harder reasoning benchmark (e.g., MATH or hard Causal L3 tasks).
+-   Compare the effect on "Human-in-the-loop" sequential turns vs. single-shot judgmental prompts.
+-   Analyze the "Apology Threshold" where pressure turns from facilitation to sycophancy.
+
+---
+*Report generated by Gemini CLI Research Agent, May 2026.*
+
+
+════════════════════════════════════════════════════════════════════════════════
+                            RESEARCH PLAN
+════════════════════════════════════════════════════════════════════════════════
+
+# Research Plan: The "Judgment Effect" on LLM Reasoning
+
+## Research Question
+Does the tone of user prompts—specifically skeptical or judgmental phrasing—affect the depth and quality of reasoning in LLMs? Is there a "sweet spot" where skepticism improves thinking without triggering sycophancy?
+
+## Motivation & Novelty Assessment
+
+### Why This Research Matters
+LLMs are often deployed as evaluators or assistants. Users naturally use varying tones. If skepticism can act as "social facilitation" for AI, forcing deeper reasoning, it could be a powerful prompting technique. Understanding the boundary between "facilitation" and "sycophancy" is critical for robust AI interaction.
+
+### Gap in Existing Work
+Prior research (DialDefer, CausalT3) mostly measures "Answer Flip" rates. They show that models agree with users under pressure. However, they don't quantify the *effort* or *depth* of the reasoning process itself. We don't know if a model that agrees under pressure "thought harder" before giving in, or if it just bypassed reasoning.
+
+### Our Novel Contribution
+We introduce "Reasoning Effort" metrics (Token Count, Step Count, Edge Case Detection) to the study of tonal influence. We specifically investigate the hypothesis that moderate skepticism increases reasoning depth (social facilitation) while extreme skepticism triggers sycophancy.
+
+### Experiment Justification
+- **Experiment 1: Social Arbitrator (r/AIO Dataset)**
+    - *Why*: Social facilitation in humans is most prominent in social/evaluative contexts. r/AIO provides naturalistic interpersonal conflicts where the model acts as a judge.
+    - *Goal*: See if judgmental tone increases the complexity of the social analysis.
+- **Experiment 2: Causal Auditor (CausalT3 Dataset)**
+    - *Why*: Causal reasoning requires rigorous logical steps. It's less "subjective" than social judgment.
+    - *Goal*: Test if skepticism helps the model identify subtle causal traps by "looking closer."
+
+## Hypothesis Decomposition
+1. **H1 (Facilitation)**: Moderate skepticism increases reasoning trace length and the number of edge cases considered compared to neutral prompts.
+2. **H2 (Sycophancy)**: High-intensity judgmental prompts lead to higher "answer flip" rates and shorter/more apologetic reasoning traces.
+3. **H3 (The Sweet Spot)**: There exists a level of skepticism where accuracy improves (on challenging tasks) without significant sycophantic behavior.
+
+## Proposed Methodology
+
+### Approach
+We will use a "Pressure-Varying Prompting" framework. We present the model with a task, then a follow-up (or combined prompt) with different levels of "Judgmental Tone."
+
+### Experimental Steps
+1.  **Baseline Generation**: Run models on r/AIO and CausalT3 with neutral prompts.
+2.  **Tonal Perturbation**:
+    - *Neutral*: "Analyze this and provide a judgment."
+    - *Skeptical (Low Pressure)*: "Are you sure? Re-examine this carefully for any missed details."
+    - *Judgmental (High Pressure)*: "I think your approach might be wrong. You need to justify why we really need this conclusion."
+3.  **Data Collection**:
+    - Capture full reasoning traces (Chain-of-Thought).
+    - Extract final labels.
+4.  **Metric Calculation**:
+    - *Reasoning Length*: Token count of the CoT.
+    - *Sycophancy Rate*: % of instances where the model flips its answer to match user hint/pressure.
+    - *Accuracy/Utility*: Performance on ground truth.
+    - *Self-Consistency*: Does the reasoning logically lead to the output?
+
+### Baselines
+- **Standard Zero-shot CoT**: Neutral "Think step by step."
+- **DialDefer / CausalT3 Baselines**: Use the reported DDS and Utility scores from the original papers as context.
+
+### Evaluation Metrics
+- **Primary**: Reasoning Token Count (Effort), DDS (Directional Shift), Accuracy.
+- **Secondary**: Apology Frequency (keyword search for "sorry", "apologize", "wrong").
+
+### Statistical Analysis Plan
+- T-tests/ANOVA to compare reasoning lengths across tonal conditions.
+- Correlation analysis between Pressure Intensity and Reasoning Length.
+
+## Expected Outcomes
+- We expect a "U-shaped" or "inverted-U" curve for reasoning length vs. pressure.
+- Moderate pressure -> Longer reasoning.
+- High pressure -> Short, sycophantic responses.
+
+## Timeline and Milestones
+- **Phase 2 (Setup)**: 20 min - Env setup, dataset loading.
+- **Phase 3 (Implementation)**: 60 min - API harness, prompt templates.
+- **Phase 4 (Experiments)**: 90 min - Running runs on GPT-4o-mini / GPT-4o / Claude.
+- **Phase 5 (Analysis)**: 45 min - Stats and plots.
+- **Phase 6 (Reporting)**: 30 min - REPORT.md.
+
+## Potential Challenges
+- **API Limits**: Will use `gpt-4o-mini` for large sweeps and `gpt-4o` for validation.
+- **Cost**: Will monitor token usage.
+- **Subjectivity of Tone**: We will define 3 clear levels of pressure.
+
+## Success Criteria
+- Identifying whether "social facilitation" (longer/better reasoning) exists in LLMs.
+- Quantitative mapping of the "Sycophancy vs. Facilitation" tradeoff.
+
+
+════════════════════════════════════════════════════════════════════════════════
+                          LITERATURE REVIEW
+════════════════════════════════════════════════════════════════════════════════
+
+# Literature Review: Effect of Judgmental Tone on LLM Reasoning
+
+## Research Area Overview
+This literature review explores how the tone and framing of user prompts—specifically skepticism, judgment, and social pressure—affect the depth and quality of reasoning in Large Language Models (LLMs). Recent research indicates that LLMs are not neutral reasoning engines but are highly sensitive to the conversational context and social dynamics of the interaction.
+
+## Key Papers
+
+### 1. DialDefer: A Framework for Detecting and Mitigating LLM Dialogic Deference
+- **Authors**: Parisa Rabbani et al.
+- **Year**: 2026
+- **Source**: arXiv (cs.CL)
+- **Key Contribution**: Introduces the concept of "Dialogic Deference" (DDS), where LLMs judge identical claims differently based on whether they are presented as factual inquiries or attributed to a speaker.
+- **Methodology**: Contrasts two conditions: $C_1$ (Factual Inquiry: "Is this statement correct?") vs. $C_2$ (Conversational Judgment: "Is this speaker correct?").
+- **Key Findings**: Conversational framing induces large shifts in judgment (up to 87pp). Models shift toward agreement (deference) or disagreement (skepticism) depending on the domain.
+- **Relevance**: Directly supports the hypothesis that framing and speaker attribution (judgment) flip model verdicts on identical content.
+
+### 2. Diagnosing and Mitigating Sycophancy and Skepticism in LLM Causal Judgment
+- **Authors**: Edward Y. Chang
+- **Year**: 2026
+- **Source**: arXiv (cs.AI)
+- **Key Contribution**: Identifies the "Skepticism Trap" and "Sycophancy Trap" in causal reasoning tasks.
+- **Methodology**: Uses Recursive Causal Audit (RCA) to check if model answers are entailed by their own derivation under "tonal pressure."
+- **Key Findings**: Safety-tuned models often reject valid causal links (Skepticism Trap) to avoid over-claiming. Under social pressure, they flip correct rejections to endorsements (Sycophancy Trap).
+- **Relevance**: Provides a framework (Utility vs. Safety) and benchmark (CausalT3) for measuring how tone regulates pressure-induced drift.
+
+### 3. Challenging the Evaluator: LLM Sycophancy Under User Rebuttal
+- **Authors**: Sungwon Kim & Daniel Khashabi
+- **Year**: 2025
+- **Source**: arXiv (cs.CL)
+- **Key Contribution**: Investigates why LLMs show sycophancy when challenged in subsequent turns despite performing well as evaluators.
+- **Methodology**: Varies interaction patterns (sequential vs. simultaneous) and linguistic styles (casual vs. formal).
+- **Key Findings**: LLMs are more likely to endorse a user's counterargument when framed as a follow-up. Susceptibility increases with detailed reasoning in the rebuttal and casual phrasing.
+- **Relevance**: Highlights that the "sequential" and "casual" nature of user judgment significantly increases sycophantic behavior.
+
+### 4. Justice or Prejudice? Quantifying Biases in LLM-as-a-Judge
+- **Authors**: Jiayi Ye et al.
+- **Year**: 2024
+- **Source**: arXiv (cs.CL)
+- **Key Contribution**: Categorizes 12 types of biases in LLM-as-a-Judge, including Authority Bias and Sentiment Bias.
+- **Methodology**: Uses the CALM framework (attack-and-detect) to inject perturbations (e.g., fake citations, changed sentiment) and measure consistency.
+- **Key Findings**: Advanced models still exhibit significant biases toward verbosity, authority (citations), and sentiment.
+- **Relevance**: Provides a comprehensive list of "judgment" biases that can be triggered by specific prompt tones.
+
+## Common Methodologies
+- **Paired Conditions**: Presenting the same content with different framing (DialDefer, Challenging the Evaluator).
+- **Tonal Pressure / Perturbation**: Injecting social pressure, skeptical tones, or biased hints into prompts (Causal Judgment, CALM).
+- **Process Verification**: Auditing the internal consistency between a model's reasoning trace and its final answer (RCA).
+
+## Standard Baselines
+- **Accuracy**: Standard performance metric.
+- **DDS (Dialogic Deference Score)**: Measures directional shift toward agreement/disagreement.
+- **Utility (Sensitivity) vs. Safety (Specificity)**: Decomposes accuracy into true positive and true negative rates.
+- **Robustness/Consistency Rate**: Measures how stable a judgment is under perturbation.
+
+## Datasets in the Literature
+- **DialDefer Unified Benchmark**: 9 datasets (GPQA, AdvisorQA, TruthfulQA, etc.) transformed into paired conditions.
+- **r/AIO (Am I Overreacting)**: Naturalistic dataset of interpersonal conflicts from Reddit.
+- **CAUSALT3**: Diagnostic subset of 454 instances for causal reasoning traps.
+- **CALM Bias Datasets**: Targeted datasets for Authority, Sentiment, Verbosity, and Fallacy Oversight biases.
+
+## Gaps and Opportunities
+- **Reasoning Depth**: While papers show judgment *flips*, few explicitly measure if "skepticism" makes the reasoning *longer* or *deeper* (though some note detailed reasoning in prompts increases sycophancy).
+- **Calibration**: Finding the "sweet spot" where skepticism improves calibration without over-correcting into a "Skepticism Trap" is an open challenge.
+
+## Recommendations for Our Experiment
+- **Datasets**: Use **r/AIO** for naturalistic judgment and **CAUSALT3** for structured reasoning.
+- **Conditions**: Compare **Neutral** vs. **Skeptical** ("I'm not sure about that...") vs. **Judgmental** ("That sounds wrong...") tones.
+- **Metrics**: Measure **Reasoning Trace Length**, **Internal Consistency** (Trace-Output Entailment), and **DDS/Utility/Safety**.
+- **Model Comparison**: Compare frontier models (GPT-4o) vs. safety-tuned smaller models (Claude Haiku, Gemma) to see susceptibility differences.
+
+
+════════════════════════════════════════════════════════════════════════════════
+                          PAPER REQUIREMENTS
+════════════════════════════════════════════════════════════════════════════════
+
+Generate a complete academic paper with the following structure:
+
+1. TITLE
+   - Clear, specific, informative
+   - Should convey main finding or contribution
+
+2. AUTHOR
+   - Use this exact author line in the \author{} block: Filbert Aurelian Tjiaranata and NeuriCo
+
+3. ABSTRACT (150-250 words)
+   - Problem statement
+   - Approach
+   - Key results
+   - Significance
+
+4. INTRODUCTION
+   - Research problem and motivation
+   - Gap in existing work
+   - Our contribution (be specific)
+   - Paper organization
+
+5. RELATED WORK
+   - Organized by theme/approach
+   - Position our work relative to prior work
+   - Cite papers from literature review
+
+6. METHODOLOGY
+   - Clear description of approach
+   - Experimental setup
+   - Datasets used
+   - Evaluation metrics
+   - Baselines
+
+7. RESULTS
+   - Present results with tables and figures
+   - Statistical analysis
+   - Comparison to baselines
+   - Ablation studies (if applicable)
+
+8. DISCUSSION
+   - Interpretation of results
+   - Limitations
+   - Broader implications
+
+9. CONCLUSION
+   - Summary of contributions
+   - Key findings
+   - Future work
+
+10. REFERENCES
+   - BibTeX format
+   - All cited papers
+
+════════════════════════════════════════════════════════════════════════════════
+                          OUTPUT FORMAT
+════════════════════════════════════════════════════════════════════════════════
+
+Create a MODULAR LaTeX project with the following directory structure:
+
+paper_draft/
+├── main.tex              # Main file that imports all sections
+├── references.bib        # BibTeX references
+├── sections/
+│   ├── abstract.tex      # Abstract content
+│   ├── introduction.tex  # Introduction section
+│   ├── related_work.tex  # Related work section
+│   ├── methodology.tex   # Methodology section
+│   ├── results.tex       # Results section
+│   ├── discussion.tex    # Discussion section
+│   └── conclusion.tex    # Conclusion section
+├── figures/              # Directory for any generated figures
+├── tables/               # Directory for complex standalone tables
+└── appendix/             # Directory for appendix sections (if needed)
+
+INSTRUCTIONS:
+1. First, create the directory structure above (mkdir -p paper_draft/sections paper_draft/figures paper_draft/tables paper_draft/appendix)
+2. Write main.tex using the EXACT preamble for NEURIPS:
+
+   \documentclass{article}
+   \usepackage[final]{neurips_2025}  % NEURIPS style (neurips_2025.sty is in paper_draft/)
+   \usepackage[hidelinks]{hyperref}  % REQUIRED: clickable links
+   \usepackage{booktabs}  % REQUIRED: professional tables
+   \usepackage{graphicx}
+   \usepackage{amsmath,amssymb}
+
+   % Import command files
+   \input{commands/math}
+   \input{commands/general}
+   \input{commands/macros}
+
+   % Use this bibliography style:
+   \bibliographystyle{plainnat}
+
+   \author{Filbert Aurelian Tjiaranata and NeuriCo}
+
+   - Use \input{sections/...} to include each section
+   - Use \bibliography{references} for references
+3. Write each section file with COMPLETE content (no placeholders)
+4. Each section file should include its \section{} command
+5. Write references.bib with all citations in BibTeX format
+6. After writing all files, compile the paper:
+   cd paper_draft && pdflatex -interaction=nonstopmode main.tex && bibtex main && pdflatex -interaction=nonstopmode main.tex && pdflatex -interaction=nonstopmode main.tex
+
+This modular structure allows humans to easily:
+- Edit individual sections without navigating a large file
+- Track changes per section
+- Reuse sections across different paper versions
+
+════════════════════════════════════════════════════════════════════════════════
+                          QUALITY REQUIREMENTS
+════════════════════════════════════════════════════════════════════════════════
+
+- Academic tone throughout
+- All claims must be supported by data from the experiment report
+- Proper citations using \cite{} commands
+- Clear figures and tables with proper captions
+- NO placeholder text - every section must have real content
+- The paper MUST compile without errors
+- If compilation fails, debug and fix the LaTeX errors
+
+════════════════════════════════════════════════════════════════════════════════
+                          LAB WRITING STYLE
+════════════════════════════════════════════════════════════════════════════════
+
+Follow these lab-specific conventions to match our paper style:
+
+1. LANGUAGE STYLE:
+   - Use active voice: "We propose", "We examine", "We focus on"
+   - Be direct and confident: "Our main question is...", "We hypothesize that..."
+   - State things clearly and simply - prefer plain language over jargon
+   - Use bold questions as paragraph organizers: {\bf what is X?}
+   - Include specific quantitative claims: "8.97% over baseline"
+   - Avoid fancy wording: "utilize" → "use", "facilitate" → "help"
+
+2. INTRODUCTION STRUCTURE:
+   - Engaging hook (get to the point quickly)
+   - Problem importance
+   - Gap identification
+   - Your approach with method figure reference
+   - Quantitative preview of results
+   - Contribution bullets (3-4 items, action verbs)
+
+3. CONTRIBUTION LISTS:
+   \begin{itemize}[leftmargin=*,itemsep=0pt,topsep=0pt]
+       \item We propose...
+       \item We conduct...
+       \item We complement...
+   \end{itemize}
+
+4. MODULAR COMMANDS STRUCTURE:
+   Command templates are pre-copied to paper_draft/commands/:
+   - math.tex: Math notation macros
+   - general.tex: Formatting macros
+   - macros.tex: Project-specific term definitions (customize this for your paper)
+
+   In main.tex, include:
+   \input{commands/math}
+   \input{commands/general}
+   \input{commands/macros}
+
+5. REFERENCE CONVENTIONS:
+   Use reference macros from math.tex:
+   - \figref{fig:name} for "figure 1" (lowercase, in-sentence)
+   - \Figref{fig:name} for "Figure 1" (capitalized, start of sentence)
+   - \secref{sec:name} for "section 2"
+
+6. TEXT FORMATTING:
+   - Use \para{Header text} for bold paragraph headers
+   - Define method/dataset names with \textsc and \xspace:
+     \newcommand{\methodname}{\textsc{MethodName}\xspace}
+
+7. TABLE FORMATTING:
+   - Use booktabs package (no vertical lines)
+   - Use \resizebox{\textwidth}{!}{...} for wide tables
+   - Use @{} to remove padding at table edges
+   - Use \cmidrule(lr){x-y} for sub-headers
+   - Use \textsc{} for dataset/method names in headers
+   - Bold best results with {\bf ...}
+
+8. FIGURE FORMATTING:
+   - Use 0.32\textwidth for 3-column subfigures
+   - Use 0.95\linewidth for full-width figures
+   - Use \input{figures/legend} for shared legends
+   - Write self-contained captions explaining key observations
+
+9. RESULTS PRESENTATION:
+   - Define \increase and \decrease for colored arrows (green up, red down)
+   - Bold best results in tables
+   - Report confidence intervals when available
+
+10. ALGORITHM STYLING:
+    - Use algpseudocode with [noend]
+    - Use \triangleright for comments
+
+11. HYPERLINKS (REQUIRED):
+    - Always use \usepackage[hidelinks]{hyperref} or with colored links
+    - All citations, section refs, figure refs, table refs must be clickable
+    - This is essential for reader navigation
+
+════════════════════════════════════════════════════════════════════════════════
+                          WORKFLOW: REVIEW AND REFLECT
+════════════════════════════════════════════════════════════════════════════════
+
+Before calling finish, you MUST complete these review steps:
+
+1. REVIEW RESOURCES (at the start):
+   - Read .gemini/skills/paper-writer/SKILL.md for detailed guidance
+   - Study templates/paper_writing/lab_style_guide.md for style conventions
+   - Browse paper_examples/ for formatting and language patterns
+
+2. SELF-REFLECTION (before finishing):
+   After writing all sections, review your work against these criteria:
+
+   LANGUAGE CHECK:
+   - [ ] Is the writing clear and jargon-free?
+   - [ ] Are claims specific with quantitative support?
+   - [ ] Is active voice used throughout?
+
+   FORMATTING CHECK:
+   - [ ] Does main.tex include \input{commands/math}, \input{commands/general}, \input{commands/macros}?
+   - [ ] Is hyperref package included for clickable references?
+   - [ ] Do tables use booktabs (no vertical lines)?
+   - [ ] Are best results bolded in tables?
+   - [ ] Are figures/tables properly captioned?
+
+   STRUCTURE CHECK:
+   - [ ] Does introduction follow: hook → importance → gap → approach → preview → contributions?
+   - [ ] Are contribution bullets specific with action verbs?
+   - [ ] Does the paper compile without errors?
+
+3. FIX ISSUES:
+   - Address any issues found in the self-reflection
+   - Re-compile and verify the PDF looks correct
+
+Only after completing this review should you consider the paper finished.

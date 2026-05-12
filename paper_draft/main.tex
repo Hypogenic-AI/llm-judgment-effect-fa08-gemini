@@ -1,0 +1,61 @@
+\documentclass{article}
+\usepackage[final]{neurips_2025}
+\usepackage[hidelinks]{hyperref}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{multirow}
+\usepackage[noabbrev,capitalize]{cleveref}
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
+
+% Import command files
+\input{commands/math}
+\input{commands/general}
+\input{commands/macros}
+
+\bibliographystyle{plainnat}
+
+\author{Filbert Aurelian Tjiaranata and NeuriCo}
+\title{The Judgment Effect: Does Evaluative Pressure Induce Deeper LLM Reasoning?}
+
+\makeatletter
+\def\@trackname{Datasets and Benchmarks}
+\makeatother
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+\input{sections/introduction}
+
+\section{Related Work}
+\label{sec:related_work}
+\input{sections/related_work}
+
+\section{Methodology}
+\label{sec:methodology}
+\input{sections/methodology}
+
+\section{Results}
+\label{sec:results}
+\input{sections/results}
+
+\section{Discussion}
+\label{sec:discussion}
+\input{sections/discussion}
+
+\section{Conclusion}
+\label{sec:conclusion}
+\input{sections/conclusion}
+
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,6 @@
+# Exclude all data files
+*
+
+# But include documentation
+!.gitignore
+!README.md

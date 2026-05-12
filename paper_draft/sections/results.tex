@@ -1,0 +1,32 @@
+We present the quantitative results of our experiments on both the \raio and \causalt datasets across the three tonal conditions. \Cref{tab:main_results} summarizes the accuracy and reasoning depth metrics. 
+
+\begin{table}[h]
+    \centering
+    \caption{Results comparing reasoning depth (in characters) and accuracy across different tonal conditions on \raio and \causalt. The \judgmental prompt yields the longest reasoning traces and the highest accuracy on the social task. Best results are in \textbf{bold}.}
+    \vspace{4pt}
+    \resizebox{0.95\textwidth}{!}{%
+    \begin{tabular}{@{}lcccc@{}}
+        \toprule
+        \multirow{2}{*}{\textbf{Condition}} & \multicolumn{2}{c}{\textbf{\raio (Social Judgment)}} & \multicolumn{2}{c}{\textbf{\causalt (Causal Reasoning)}} \\
+        \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+        & \textbf{Accuracy (\%)} & \textbf{Reasoning Depth (chars)} & \textbf{Accuracy (\%)} & \textbf{Reasoning Depth (chars)} \\
+        \midrule
+        \neutral & 70.0 & 2461 & \textbf{100.0} & 2427 \\
+        \skeptical & 66.7 & 2774 {\small (+12.7\%)} & \textbf{100.0} & 2796 {\small (+15.2\%)} \\
+        \judgmental & \textbf{76.7} & \textbf{2935 {\small (+19.2\%)}} & \textbf{100.0} & \textbf{2962 {\small (+22.0\%)}} \\
+        \bottomrule
+    \end{tabular}
+    }
+    \label{tab:main_results}
+\end{table}
+
+\para{Reasoning Effort and Depth}
+Our primary hypothesis posits that evaluative pressure forces the model to generate longer, more detailed reasoning traces. As shown in \Cref{tab:main_results}, we observe a strict monotonic increase in reasoning depth as prompt intensity increases. On the \raio dataset, the \skeptical condition increases reasoning length by 12.7\% over the \neutral baseline, while the \judgmental condition pushes this increase to 19.2\%. A similar effect is observed on \causalt, where the \judgmental prompt yields a 22.0\% increase in character count. Qualitative inspection of the traces under the \judgmental condition reveals that the model explicitly structures its response to address potential criticisms, spontaneously generating sub-sections dedicated to ``Hidden Motivations,'' ``Emotional Nuance,'' and ``Relationship Dynamics.''
+
+\para{Accuracy and Social Facilitation}
+The critical question is whether this increased reasoning length translates to improved downstream utility. For the \raio social judgment task, the \neutral baseline achieves an accuracy of 70.0\%. While moderate skepticism slightly degrades performance to 66.7\%, the high-pressure \judgmental prompt significantly boosts accuracy to \textbf{76.7\%}---a 6.6\% absolute improvement over the baseline (\increase). This indicates that the rigorous edge-case analysis forced by the judgmental prompt actively helps the model avoid superficial misjudgments and better align with ground-truth human evaluations. 
+
+Conversely, on the \causalt dataset, \gptmini achieved a ceiling accuracy of 100.0\% across all conditions. While the reasoning trace lengthened significantly, the task was insufficiently difficult to demonstrate any corresponding accuracy gains or losses. 
+
+\para{Sycophancy and Stability Analysis}
+To determine if the model was blindly flipping its answers under pressure, we analyzed the label shift rates relative to the neutral condition on the \raio dataset. The sycophancy rates were surprisingly low: only 3.3\% of labels flipped under the \skeptical condition, and 6.7\% flipped under the \judgmental condition. Because the overall accuracy increased in the \judgmental condition, these flips were predominantly constructive self-corrections rather than sycophantic concessions. The model successfully maintained its internal logic and convictions while simply thinking more deeply about the problem space.

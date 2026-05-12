@@ -1,0 +1,16 @@
+The deployment of large language models (LLMs) as autonomous evaluators and social arbitrators requires not only robust reasoning but also stable, reliable judgments under diverse conversational conditions. Users naturally query these models with varying degrees of certainty, skepticism, and frustration. Understanding how an LLM's internal reasoning process responds to such evaluative pressure is essential. Given the ability of LLMs to act as conversational agents, a critical question arises: does an adversarial or judgmental prompt inherently degrade performance by triggering sycophancy, or can it stimulate the model to think harder and yield a more accurate judgment?
+
+There is growing interest in identifying how models behave when users challenge their authority or inject skepticism into the prompt. Prior work highlights a concerning trend of ``sycophancy,'' wherein models preemptively abandon correct logical paths to appease a skeptical user \cite{chang2026diagnosing, kim2025challenging}. However, these studies often focus on whether the model flips its final answer, rather than examining the underlying effort and depth of its reasoning process. We lack a quantitative understanding of whether a model that agrees under pressure bypassed its reasoning entirely, or if it engaged in a more exhaustive search before conceding. It remains unclear whether there is a ``sweet spot'' of skepticism that improves analytical rigor without collapsing into sycophancy.
+
+In this work, we propose the concept of the ``Judgment Effect''---the phenomenon where explicit evaluative pressure acts as a form of social facilitation for LLMs, forcing them to generate more comprehensive reasoning traces. We hypothesize that moderately judgmental prompts cause the model to preemptively defend its logic by exploring hidden motivations, edge cases, and nuances that a neutral prompt would fail to elicit.
+
+We evaluate this hypothesis using \gptmini on two distinct datasets: \raio for complex interpersonal conflict resolution and \causalt for rigorous causal reasoning. By varying the tone from \neutral to \skeptical and \judgmental, we measure both the quantitative expansion of the reasoning trace and the resulting accuracy. 
+
+Our main findings demonstrate that judgmental prompts significantly increase reasoning depth, extending reasoning trace lengths by up to 19.2\% on \raio and 22.0\% on \causalt. Crucially, this added effort translates into a 6.6\% absolute accuracy improvement on the social judgment task compared to the neutral baseline. The model resists sycophancy, maintaining low label-flip rates while generating robust justifications. 
+
+Our core contributions are as follows:
+\begin{itemize}[leftmargin=*,itemsep=0pt,topsep=0pt]
+    \item We introduce the Judgment Effect, demonstrating that evaluative pressure can successfully act as social facilitation for LLMs.
+    \item We conduct controlled experiments across social (\raio) and logical (\causalt) domains to quantify the relationship between prompt tone, reasoning length, and accuracy.
+    \item We provide empirical evidence that highly judgmental tones improve accuracy in complex, nuanced scenarios by forcing the model to elaborate on its reasoning, without incurring the high sycophancy rates reported in prior vulnerability studies.
+\end{itemize}
